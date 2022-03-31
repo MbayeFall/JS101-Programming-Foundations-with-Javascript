@@ -1,1 +1,1 @@
-Exercises that I've done through JS101
+Exercises that I've done throughout JS101
