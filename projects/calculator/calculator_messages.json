@@ -1,0 +1,24 @@
+{
+  "en": {
+    "welcome": "Welcome to the Calculator !",
+    "firstNumber": "What's the first number ?",
+    "secondNumber": "What's the second number ?",
+    "wrongNumber": "Hmm... that doesn't look like a valid number.",
+    "operation": "What operation would you like to perform ?\n1) Add 2) Subtract 3) Multiply 4) Divide",
+    "wrongOperation": "Hmm... that doesn't look like a valid operation.\n Please choose between 1, 2, 3, 4",
+    "newCalculation":"Would you like to perform another calculation ?\nPick \"y\" to continue\nPress another button to exit",
+   "result": "The result is:",
+    "exit": "exiting..."
+  },
+  "fr": {
+    "welcome": "Bienvenue à la Calculatrice !",
+    "firstNumber": "Quel est le premier chiffre ?",
+    "secondNumber": "Quel est le deuxième chiffre ?",
+    "wrongNumber": "Hmm... ça n'a pas l'air d'être un numéro valide.",
+    "operation": "Quelle opération souhaitez-vous effectuer\n ? 1) Additionner 2) Soustraire 3) Multiplier 4) Diviser",
+    "wrongOperation": "Hmm... cela ne semble pas être une opération valide.\n Veuillez choisir entre 1, 2, 3 et 4.",
+    "newCalculation":"Voulez-vous effectuer un autre calcul ?\nChoisissez \"y\" pour continuer\nAppuyez sur un autre bouton pour quitter.",
+   "result": "Le résultat est :",
+    "exit": "fermeture..."
+  }
+}
