@@ -112,9 +112,7 @@ function performCalculation() {
 }
 
 function displayResult() {
-  if (Number(operation) === 4 && Number(number2) === 0) {
-    
-  } else {
+  if (!(Number(operation) === 4 && Number(number2) === 0)) {
     prompt(`${displayMessage('result', language)} ${output}`);
   }
 }
