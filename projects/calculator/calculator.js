@@ -1,6 +1,11 @@
 const MESSAGES = require('./calculator_messages.json');
 const readline = require('readline-sync');
 let language;
+let number1;
+let number2;
+let operation;
+let output;
+let answer;
 
 //Bannerizer from Easy 3 exercise JS101
 function logInBox(message) {
@@ -14,71 +19,78 @@ function logInBox(message) {
   console.log(`${horizontalRule}\n`);
 }
 
+function displayMessage(message, language) {
+  return MESSAGES[language][message];
+}
+
+function welcomeMessage() {
+  logInBox(displayMessage('welcome', language));
+}
+
 function prompt(message) {
   console.log(`=> ${message}`);
 }
+
 
 function invalidNumber(number) {
   return Number.isNaN(Number(number));
 }
 //language definition edge cases
-function defineLanguage() {
+function getLanguage() {
+  prompt('Choose your language\nPick 1) English or 2) French');
+  language = readline.question().toLowerCase();
   if (['1', 'english', 'en'].includes(language)) {
     language = 'en';
   } else if (['2', 'french', 'fr'].includes(language)) {
     language = 'fr';
   }
+
+  //If language picked is not supported
+  while (!['1', 'english', 'en'].includes(language) && !['2', 'french', 'fr'].includes(language)) {
+    prompt('Language not supported! Please choose between 1 and 2');
+    language = readline.question().toLowerCase();
+    if (['1', 'english', 'en'].includes(language)) {
+      language = 'en';
+    } else if (['2', 'french', 'fr'].includes(language)) {
+      language = 'fr';
+    }
+  }
 }
 
-function displayMessage(message, language) {
-  return MESSAGES[language][message];
-}
-
-//Start of program
-//User picks language
-prompt('Choose your language\nPick 1) English or 2) French');
-language = readline.question().toLowerCase();
-defineLanguage();
-
-//If language picked is not supported
-while (!['1', 'english', 'en'].includes(language) && !['2', 'french', 'fr'].includes(language)) {
-  prompt('Language not supported! Please choose between 1 and 2');
-  language = readline.question().toLowerCase();
-  defineLanguage();
-}
-
-
-//Welcome message
-logInBox(displayMessage('welcome', language));
-
-while (true) {
+function getFirstNumber() {
   //User enters first number
   prompt(displayMessage('firstNumber', language));
-  let number1 = readline.question();
+  number1 = readline.question();
   //When wrong number is entered
   while (number1.trimStart() === '' || invalidNumber(number1)) {
     prompt(displayMessage('wrongNumber', language));
     number1 = readline.question();
   }
+}
+
+function getSecondNumber() {
   //User enters second number
   prompt(displayMessage('secondNumber', language));
-  let number2 = readline.question();
+  number2 = readline.question();
   //When wrong number is entered
   while (number2.trimStart() === '' || invalidNumber(number2)) {
     prompt(displayMessage('wrongNumber', language));
     number2 = readline.question();
   }
+}
 
+function getOperation() {
   //User enters desired operation
   prompt(displayMessage('operation', language));
-  let operation = readline.question();
+  operation = readline.question();
   //When wrong operation is entered
   while (!['1', '2', '3', '4'].includes(operation)) {
     prompt(displayMessage('wrongOperation', language));
     operation = readline.question();
   }
+}
 
-  let output;
+function performCalculation() {
   switch (operation) {
     case '1':
       output = Number(number1) + Number(number2);
@@ -90,17 +102,43 @@ while (true) {
       output = Number(number1) * Number(number2);
       break;
     case '4':
-      output = Number(number1) / Number(number2);
-      break;
+      if (Number(number2) === 0) {
+        prompt(displayMessage('division0', language));
+      } else {
+        output = Number(number1) / Number(number2);
+        break;
+      }
   }
-  //Display result
-  prompt(`${displayMessage('result', language)} ${output}`);
+}
+
+function displayResult() {
+  if (Number(operation) === 4 && Number(number2) !== 0) {
+    prompt(`${displayMessage('result', language)} ${output}`);
+  }
+}
+
+function askNewCalculation() {
   //Ask if user wants a new calculation
   prompt(displayMessage('newCalculation', language));
-  let answer = readline.question().toLowerCase();
+  answer = readline.question().toLowerCase();
+}
+
+//Start of program
+
+getLanguage();
+welcomeMessage();
+
+while (true) {
+  getFirstNumber();
+  getSecondNumber();
+  getOperation();
+  performCalculation();
+  displayResult();
+  askNewCalculation();
   //Stop the program if user doesn't want new calculation
   if (!['y', 'yes'].includes(answer)) {
     prompt(displayMessage('exit', language));
     break;
   }
+  console.clear();
 }
