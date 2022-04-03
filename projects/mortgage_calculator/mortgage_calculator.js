@@ -50,10 +50,11 @@ function getLoanDuration() {
     prompt("Hmm... That seems like an invalid number, please try again !");
     loanDurationInYears = readlineSync.question();
   }
-  return loanDurationInYears
+  return loanDurationInYears;
 }
-function performCalculation(loanAmount, monthlyInterestRate, loanDurationInMonths) {
-  monthlyPayment = loanAmount * (monthlyInterestRate / (1 -
+function performCalculation(loanAmount,
+  monthlyInterestRate, loanDurationInMonths) {
+  let monthlyPayment = loanAmount * (monthlyInterestRate / (1 -
   Math.pow((1 + monthlyInterestRate), (-loanDurationInMonths))));
   return monthlyPayment;
 }
@@ -74,7 +75,8 @@ while (true) {
   let loanDurationInYears = getLoanDuration();
   let monthlyInterestRate = annualInterestRate / 12;
   let loanDurationInMonths = loanDurationInYears * 12;
-  let monthlyPayment = performCalculation(loanAmount, monthlyInterestRate, loanDurationInMonths);
+  let monthlyPayment = performCalculation(loanAmount,
+    monthlyInterestRate, loanDurationInMonths);
   printPaymentAmount(monthlyPayment);
   let restart = askNewCalculation();
   if (!["y", "yes"].includes(restart)) break;
