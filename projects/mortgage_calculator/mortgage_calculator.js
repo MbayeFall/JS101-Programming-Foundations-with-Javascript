@@ -55,7 +55,12 @@ function getLoanDuration() {
     LoanDurationInYears = readlineSync.question();
   }
 }
-
+function performCalculation() {
+  monthlyInterestRate = annualInterestRate / 12;
+  LoanDurationInMonths = LoanDurationInYears * 12;
+  monthlyPayment = loanAmount * (monthlyInterestRate / (1 -
+  Math.pow((1 + monthlyInterestRate), (-LoanDurationInMonths))))
+}
 function printPaymentAmount() {
   prompt(`The monthly payment amount is $${monthlyPayment.toFixed(2)}`);
 }
@@ -71,10 +76,7 @@ while (true) {
   getLoanAmount();
   getInterestRate();
   getLoanDuration();
-  monthlyInterestRate = annualInterestRate / 12;
-  LoanDurationInMonths = LoanDurationInYears * 12;
-  monthlyPayment = loanAmount * (monthlyInterestRate / (1 -
-  Math.pow((1 + monthlyInterestRate), (-LoanDurationInMonths))));
+  performCalculation();
   printPaymentAmount();
   askNewCalculation();
   if (!["y", "yes"].includes(restart)) break;
