@@ -59,7 +59,7 @@ function performCalculation() {
   monthlyInterestRate = annualInterestRate / 12;
   LoanDurationInMonths = LoanDurationInYears * 12;
   monthlyPayment = loanAmount * (monthlyInterestRate / (1 -
-  Math.pow((1 + monthlyInterestRate), (-LoanDurationInMonths))))
+  Math.pow((1 + monthlyInterestRate), (-LoanDurationInMonths))));
 }
 function printPaymentAmount() {
   prompt(`The monthly payment amount is $${monthlyPayment.toFixed(2)}`);
