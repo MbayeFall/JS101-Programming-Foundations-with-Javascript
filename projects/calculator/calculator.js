@@ -1,7 +1,6 @@
 const MESSAGES = require('./calculator_messages.json');
 const readline = require('readline-sync');
 let language;
-let answer;
 
 //Bannerizer from Easy 3 exercise JS101
 function logInBox(message) {
@@ -105,7 +104,7 @@ function displayResult(output, operation, number2) {
 function askNewCalculation() {
   //Ask if user wants a new calculation
   prompt(displayMessage('newCalculation', language));
-  answer = readline.question().toLowerCase();
+  return readline.question().toLowerCase();
 }
 
 //Start of program
@@ -119,9 +118,9 @@ while (true) {
   let operation = getOperation();
   let output = performCalculation(operation, number1, number2);
   displayResult(output, operation, number2);
-  askNewCalculation();
+  let restart = askNewCalculation();
   //Stop the program if user doesn't want new calculation
-  if (!['y', 'yes'].includes(answer)) {
+  if (!['y', 'yes'].includes(restart)) {
     prompt(displayMessage('exit', language));
     break;
   }
