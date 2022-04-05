@@ -21,4 +21,4 @@ function isDotSeparatedIpAddress(inputString) {
   }
 
   return true;
-}
+};
