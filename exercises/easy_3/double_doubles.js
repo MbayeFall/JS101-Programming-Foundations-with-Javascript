@@ -3,7 +3,7 @@ function twice(number) {
   if (number.slice(0, (number.length / 2)) === number.slice(number.length / 2)) {
     console.log(Number(number));
   } else {
-    console.log(Number(number * 2))
+    return Number(number * 2);
   }
 };
 

@@ -1,0 +1,1 @@
+// The pop method removes the last element of an array and returns it. Therefore length property in this case refers to the last element which has a length of 11.

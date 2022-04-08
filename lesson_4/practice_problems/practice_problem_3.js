@@ -1,0 +1,1 @@
+// [1, 4, 9] the map method iterates over the array and on each iteration it multiplies the element by itself and pushes it to a new array that it returns.

@@ -1,0 +1,1 @@
+// The map method in this case returns undefined because callback function does not use the keyword "return" explicitly.
