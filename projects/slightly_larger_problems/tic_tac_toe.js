@@ -270,7 +270,7 @@ while (true) {
     }
     if (['n', 'no'].includes(continueGame)) break;
   }
-  // PLAY
+  // PLAY AGAIN?
   prompt('Restart Game? (y/n)');
   let restart = readline.question().toLowerCase().trim();
 
