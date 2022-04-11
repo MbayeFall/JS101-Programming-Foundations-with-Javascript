@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "colors": "^1.4.0",
+    "font-size": "^0.1.6",
+    "node-emoji": "^1.11.0",
     "readline-sync": "^1.4.10"
   },
   "devDependencies": {
