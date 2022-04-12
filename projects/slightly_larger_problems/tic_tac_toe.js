@@ -41,16 +41,16 @@ function displayBoard(board) {
   console.log('');
 }
 
-function askFirstPlayer(){
+function askFirstPlayer() {
   prompt(`${'Pick first player?'.inverse}\n${'1) Player'.blue} ${'2) Computer'.red}`);
 
   let firstPlayer = readline.question().toLowerCase().trim();
-  
+
   while (!['1', '2', 'player', 'computer'].includes(firstPlayer)) {
     prompt('Please choose 1 or 2!');
     firstPlayer = readline.question().toLowerCase().trim();
   }
-  
+
   return firstPlayer;
 }
 
@@ -158,7 +158,7 @@ function displayGrandWinner (winner) {
 
 function askForContinue() {
   prompt('Continue? (y/n)');
-  
+
   let continueGame = readline.question().toLowerCase();
 
   while (!['y', 'yes', 'n', 'no'].includes(continueGame)) {
@@ -254,14 +254,12 @@ function displayThanksMessage() {
   prompt('Thanks for playing Tic Tac Toe!'.rainbow);
 }
 
-
+// START OF PROGRAM
 displayWelcomeMessage();
-//ASK QUESTIONS
+
 while (true) {
   let playerScore = 0;
   let computerScore = 0;
-
- 
 
   while (true) {
 
