@@ -41,6 +41,19 @@ function displayBoard(board) {
   console.log('');
 }
 
+function askFirstPlayer(){
+  prompt(`${'Pick first player?'.inverse}\n${'1) Player'.blue} ${'2) Computer'.red}`);
+
+  let firstPlayer = readline.question().toLowerCase().trim();
+  
+  while (!['1', '2', 'player', 'computer'].includes(firstPlayer)) {
+    prompt('Please choose 1 or 2!');
+    firstPlayer = readline.question().toLowerCase().trim();
+  }
+  
+  return firstPlayer;
+}
+
 function initializeBoard() {
   let board = {};
 
@@ -143,6 +156,31 @@ function displayGrandWinner (winner) {
   }
 }
 
+function askForContinue() {
+  prompt('Continue? (y/n)');
+  
+  let continueGame = readline.question().toLowerCase();
+
+  while (!['y', 'yes', 'n', 'no'].includes(continueGame)) {
+    prompt('Please pick y or n');
+    continueGame = readline.question().toLowerCase();
+  }
+
+  return continueGame;
+}
+
+function askForRestart() {
+  prompt('Restart Game? (y/n)');
+  let restart = readline.question().toLowerCase().trim();
+
+  while (!['y', 'n', 'yes', 'no'].includes(restart)) {
+    prompt('Please enter y or n');
+    restart = readline.question().toLowerCase().trim();
+  }
+
+  return restart;
+}
+
 function joinOr(arr, separator = ', ', joinWord = 'or') {
   let finalStr = "";
   let arr1 = arr.slice(0, arr.length - 1);
@@ -223,14 +261,11 @@ while (true) {
   let playerScore = 0;
   let computerScore = 0;
 
-  while (true) {
-    prompt(`${'Pick first player?'.inverse}\n${'1) Player'.blue} ${'2) Computer'.red}`);
-    let currentPlayer = readline.question().toLowerCase().trim();
+ 
 
-    while (!['1', '2', 'player', 'computer'].includes(currentPlayer)) {
-      prompt('Please choose 1 or 2!');
-      currentPlayer = readline.question().toLowerCase().trim();
-    }
+  while (true) {
+
+    let currentPlayer = askFirstPlayer();
 
     let board = initializeBoard();
 
@@ -256,29 +291,15 @@ while (true) {
     displayScore(playerScore, computerScore);
 
     let winner = checkGrandWinner(playerScore, computerScore);
-
     displayGrandWinner(winner);
 
     if (winner) break;
-    //CONTINUE?
-    prompt('Continue? (y/n)');
-    let continueGame = readline.question().toLowerCase();
 
-    while (!['y', 'yes', 'n', 'no'].includes(continueGame)) {
-      prompt('Please pick y or n');
-      continueGame = readline.question().toLowerCase();
-    }
+    let continueGame = askForContinue();
     if (['n', 'no'].includes(continueGame)) break;
   }
-  // PLAY AGAIN?
-  prompt('Restart Game? (y/n)');
-  let restart = readline.question().toLowerCase().trim();
 
-  while (!['y', 'n', 'yes', 'no'].includes(restart)) {
-    prompt('Please enter y or n');
-    restart = readline.question().toLowerCase().trim();
-  }
-
+  let restart = askForRestart();
   if (!['yes', 'y'].includes(restart)) break;
 }
 
