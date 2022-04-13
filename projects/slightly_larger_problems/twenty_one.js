@@ -13,15 +13,6 @@ function prompt(msg) {
   console.log(`=> ${msg}`);
 }
 
-function printWelcomeMessage() {
-  console.clear();
-  prompt('Welcome to the 21 Game!\n'.rainbow);
-
-  prompt('Game starting in 3');
-  setTimeout(() => {prompt('Game starting in 2')}, 1000);
-  setTimeout(() => {prompt('Game starting in 1')}, 2000);
-}
-
 function randomCardGenerator() {
   let colors = Object.keys(DECK);
   let randomColorIndex = Math.floor(Math.random() * colors.length);
@@ -44,7 +35,9 @@ function cardDuplicateChecker(playerCards, newCard) {
 function dealCards(numOfCards, player) {
   for (let times = 0; times < numOfCards; times++) {
     let randomCard = randomCardGenerator();
-    while (cardDuplicateChecker(player, randomCard) === false) randomCard = randomCardGenerator();
+    while (cardDuplicateChecker(player, randomCard) === false) {
+      randomCard = randomCardGenerator();
+    }
     player.push(randomCard);
   }
 }
@@ -54,7 +47,7 @@ function displayCPUFirstCard(dealerCards) {
   prompt(`${emoji.get('robot_face')} ${'Dealer'.brightRed} has: ${`${firstCardNumber} and Unknown card`.brightRed}\n`);
 }
 
-function displayUserCards(userCards, userCount) {
+function displayUserCards(userCards) {
   console.clear();
   let cardNumbers = userCards.map(card => card[1]).flat();
 
@@ -99,14 +92,14 @@ function addCount(cardNumbers, count) {
     if (['Jack', 'Queen', 'King'].includes(currentNumber)) {
       count += 10;
     } else if (currentNumber === 'Ace') {
-        count += 11;
-        numberOfAces += 1
+      count += 11;
+      numberOfAces += 1;
     } else {
       count += Number(currentNumber);
     }
   }
 
-  for (let num = 0; num < numberOfAces; num++ ){
+  for (let num = 0; num < numberOfAces; num++ ) {
     if (count > 21) count -= 10;
   }
   return count;
@@ -119,7 +112,7 @@ function ifUserPicksHit(userChoice, userCards) {
 }
 
 function displayCounts(userCount, dealerCount) {
-  prompt(`${emoji.get('man')} ${`Your Count: ${userCount}`.brightGreen} ${emoji.get('robot_face')} ${`Dealer Count: ${dealerCount}`.brightRed}\n`)
+  prompt(`${emoji.get('man')} ${`Your Count: ${userCount}`.brightGreen} ${emoji.get('robot_face')} ${`Dealer Count: ${dealerCount}`.brightRed}\n`);
 }
 
 function printUserGoesBust() {
@@ -191,73 +184,71 @@ function askForRestartGame() {
   let restart = readline.question().toLowerCase().trim();
 
   while (!['y', 'yes', 'n', 'no'].includes(restart)) {
-    prompt(`Please choose y or n ${emoji.get('pray')}`)
+    prompt(`Please choose y or n ${emoji.get('pray')}`);
     restart = readline.question().toLowerCase().trim();
   }
   return restart;
 }
 
 function printThanksMessage() {
-  prompt(`${`Thanks for playing 21. See you next time!`.rainbow} ${emoji.get('wave')}`)
+  prompt(`${`Thanks for playing 21. See you next time!`.rainbow} ${emoji.get('wave')}`);
 }
 
 
-printWelcomeMessage();
 
-setTimeout(() => {
+while (true) {
+
+  //initialize deck
+  let userCards = [];
+  let dealerCards = [];
+  let userCount = 0;
+  let dealerCount = 0;
+
+  //deal starting cards
+  dealCards(2, userCards);
+  dealCards(2, dealerCards);
+
+  //add scores
+  userCount = addUserCount(userCards);
+  dealerCount = addDealerCount(dealerCards);
+
+  displayUserCards(userCards);
+  displayCPUFirstCard(dealerCards);
+
+  // Ask User Hit or Stay?
   while (true) {
-    //initialize deck
-    let userCards = [];
-    let dealerCards = [];
-    let userCount = 0;
-    let dealerCount = 0;
-  
-    //deal starting cards
-    dealCards(2, userCards);
-    dealCards(2, dealerCards);
-  
-    //add scores
+    let userChoice = askHitOrStay();
+    ifUserPicksHit(userChoice, userCards);
     userCount = addUserCount(userCards);
+    displayUserCards(userCards);
+
+    if (['2', 'stay'].includes(userChoice) || busted(userCount)) break;
+  }
+
+  if (busted(userCount)) {
+    displayCPUCards(dealerCards);
+    printUserGoesBust();
+    displayCounts(userCount, dealerCount);
+  } else {
+    ifDealerPicksHit(dealerCount,dealerCards);
     dealerCount = addDealerCount(dealerCards);
-  
-    displayUserCards(userCards, userCount);
-    displayCPUFirstCard(dealerCards);
-  
-    // Ask User Hit or Stay?
-    while (true) {
-      let userChoice = askHitOrStay();
-      ifUserPicksHit(userChoice, userCards);
-      userCount = addUserCount(userCards);
-      displayUserCards(userCards, userCount);
-  
-      if (['2', 'stay'].includes(userChoice) || busted(userCount)) break;
-    }
-  
-    if (busted(userCount)) {
+
+    if (busted(dealerCount)) {
       displayCPUCards(dealerCards);
-      printUserGoesBust();
-      displayCounts(userCount, dealerCount)
-    } else {
-      ifDealerPicksHit(dealerCount,dealerCards);
-      dealerCount = addDealerCount(dealerCards);
-  
-      if (busted(dealerCount)) {
-        displayCPUCards(dealerCards);
-        printDealerGoesBust();
-        displayCounts(userCount, dealerCount)
-      }
-    }
-  
-    if (!(busted(userCount) || busted(dealerCount))) {
-      displayCPUCards(dealerCards);
-      printWinner(userCount, dealerCount);
+      printDealerGoesBust();
       displayCounts(userCount, dealerCount);
     }
-  
-    let restart = askForRestartGame();
-    
-  
-    if (['n', 'no'].includes(restart)) break;
   }
-  printThanksMessage();
-}, 3000);
+
+  if (!(busted(userCount) || busted(dealerCount))) {
+    displayCPUCards(dealerCards);
+    printWinner(userCount, dealerCount);
+    displayCounts(userCount, dealerCount);
+  }
+
+  let restart = askForRestartGame();
+
+  if (['n', 'no'].includes(restart)) break;
+}
+
+printThanksMessage();
