@@ -195,7 +195,6 @@ function printThanksMessage() {
 }
 
 
-
 while (true) {
 
   //initialize deck
