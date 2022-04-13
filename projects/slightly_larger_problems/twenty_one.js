@@ -1,6 +1,8 @@
 const readline = require('readline-sync');
 const color = require('colors');
 const emoji = require('node-emoji');
+const MAX_COUNT = 21;
+const DEALER_HIT_LIMIT = 17;
 
 const DECK = {
   hearts: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'],
@@ -103,7 +105,7 @@ function addCount(cardNumbers, count) {
   }
 
   for (let num = 0; num < numberOfAces; num++ ) {
-    if (count > 21) count -= 10;
+    if (count > MAX_COUNT) count -= 10;
   }
   return count;
 }
@@ -132,7 +134,7 @@ function displayScores(userScore, dealerScore) {
 }
 
 function busted(count) {
-  return count > 21;
+  return count > MAX_COUNT;
 }
 
 function printDealerWins() {
@@ -144,7 +146,7 @@ function printUserWins() {
 }
 
 function ifDealerPicksHit(dealerCount, dealerCards) {
-  while (dealerCount < 17) {
+  while (dealerCount < DEALER_HIT_LIMIT) {
     dealCards(1, dealerCards);
     dealerCount = addDealerCount(dealerCards);
   }
@@ -236,7 +238,7 @@ function askForRestart() {
 }
 
 function printThanksMessage() {
-  prompt(`${`Thanks for playing 21. See you next time!`.rainbow} ${emoji.get('wave')}`);
+  prompt(`${`Thanks for playing ${MAX_COUNT}. See you next time!`.rainbow} ${emoji.get('wave')}`);
 }
 
 while (true) {
