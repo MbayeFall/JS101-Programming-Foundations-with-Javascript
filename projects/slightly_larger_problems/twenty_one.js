@@ -13,9 +13,13 @@ function prompt(msg) {
   console.log(`=> ${msg}`);
 }
 
-function displayWelcomeMessage() {
+function printWelcomeMessage() {
   console.clear();
   prompt('Welcome to the 21 Game!\n'.rainbow);
+
+  prompt('Game starting in 3');
+  setTimeout(() => {prompt('Game starting in 2')}, 1000);
+  setTimeout(() => {prompt('Game starting in 1')}, 2000);
 }
 
 function randomCardGenerator() {
@@ -28,9 +32,20 @@ function randomCardGenerator() {
   return randomCard;
 }
 
+function cardDuplicateChecker(playerCards, newCard) {
+  let valid = true;
+  for (let card = 0; card < playerCards.length; card++) {
+    if (playerCards[card][0] === newCard[0] &&
+       playerCards[card][1] === newCard[1]) valid = false;
+  }
+  return valid;
+}
+
 function dealCards(numOfCards, player) {
   for (let times = 0; times < numOfCards; times++) {
-    player.push(randomCardGenerator());
+    let randomCard = randomCardGenerator();
+    while (cardDuplicateChecker(player, randomCard) === false) randomCard = randomCardGenerator();
+    player.push(randomCard);
   }
 }
 
@@ -39,7 +54,7 @@ function displayCPUFirstCard(dealerCards) {
   prompt(`${emoji.get('robot_face')} ${'Dealer'.brightRed} has: ${`${firstCardNumber} and Unknown card`.brightRed}\n`);
 }
 
-function displayUserCards(userCards) {
+function displayUserCards(userCards, userCount) {
   console.clear();
   let cardNumbers = userCards.map(card => card[1]).flat();
 
@@ -63,36 +78,38 @@ function askHitOrStay() {
 }
 
 function addUserCount(userCards) {
-  let score = 0;
+  let count = 0;
   let cardNumbers = userCards.map(card => card[1]).flat();
 
-  score = addScore(cardNumbers, score);
-  return score;
+  count = addCount(cardNumbers, count);
+  return count;
 }
 
 function addDealerCount(dealerCards) {
-  let score = 0;
+  let count = 0;
   let cardNumbers = dealerCards.map(card => card[1]).flat();
-  score = addScore(cardNumbers, score);
-  return score;
+  count = addCount(cardNumbers, count);
+  return count;
 }
 
-function addScore(cardNumbers, score) {
+function addCount(cardNumbers, count) {
+  let numberOfAces = 0;
   for (let index = 0; index < cardNumbers.length; index++) {
     let currentNumber = cardNumbers[index];
     if (['Jack', 'Queen', 'King'].includes(currentNumber)) {
-      score += 10;
+      count += 10;
     } else if (currentNumber === 'Ace') {
-      if (score + 11 > 21) {
-        score += 1;
-      } else {
-        score += 11;
-      }
+        count += 11;
+        numberOfAces += 1
     } else {
-      score += Number(currentNumber);
+      count += Number(currentNumber);
     }
   }
-  return score;
+
+  for (let num = 0; num < numberOfAces; num++ ){
+    if (count > 21) count -= 10;
+  }
+  return count;
 }
 
 function ifUserPicksHit(userChoice, userCards) {
@@ -101,8 +118,12 @@ function ifUserPicksHit(userChoice, userCards) {
   }
 }
 
+function displayCounts(userCount, dealerCount) {
+  prompt(`${emoji.get('man')} ${`Your Count: ${userCount}`.brightGreen} ${emoji.get('robot_face')} ${`Dealer Count: ${dealerCount}`.brightRed}\n`)
+}
+
 function printUserGoesBust() {
-  prompt(`Oh Oh! You go bust! Dealer wins ${emoji.get('sweat_smile')}`);
+  prompt(`${`Oh Oh! You go bust! ${emoji.get('robot_face')} Dealer wins!`.inverse} ${emoji.get('yum')}\n`);
 }
 
 function busted(count) {
@@ -110,11 +131,11 @@ function busted(count) {
 }
 
 function printDealerWins() {
-  prompt(`${emoji.get('robot_face')} Dealer wins! Better luck next time ${emoji.get('sweat_smile')}`);
+  prompt(`${`${emoji.get('robot_face')} Dealer wins! Better luck next time`.inverse} ${emoji.get('yum')}\n`);
 }
 
 function printUserWins() {
-  prompt(`${emoji.get('man')} You win! Well done with the "Stay" ${emoji.get('trophy')}.`);
+  prompt(`${`${emoji.get('man')} You win! Well done with the "Stay"`.inverse} ${emoji.get('trophy')}\n`);
 }
 
 function ifDealerPicksHit(dealerCount, dealerCards) {
@@ -125,7 +146,7 @@ function ifDealerPicksHit(dealerCount, dealerCards) {
 }
 
 function printDealerGoesBust() {
-  prompt(`Oh Oh! Dealer goes bust! You win ${emoji.get('trophy')}`);
+  prompt(`${`Oh Oh! Dealer goes bust! ${emoji.get('man')} You win`.inverse} ${emoji.get('trophy')}\n`);
 }
 
 function joinAnd(arr, separator = ', ', joinWord = 'and') {
@@ -161,54 +182,82 @@ function printWinner(userCount, dealerCount) {
   } else if (userCount < dealerCount) {
     printDealerWins();
   } else {
-    prompt(`It's a tie! ${emoji.get('scales')}`);
+    prompt(`${`It's a tie!`.inverse} ${emoji.get('scales')}\n`);
   }
 }
 
-displayWelcomeMessage();
+function askForRestartGame() {
+  prompt('Would you like to play again? (y/n)');
+  let restart = readline.question().toLowerCase().trim();
 
-//initialize deck
-let userCards = [];
-let dealerCards = [];
-let userCount = 0;
-let dealerCount = 0;
-
-//deal starting cards
-dealCards(2, userCards);
-dealCards(2, dealerCards);
-
-//add scores
-userCount = addUserCount(userCards);
-dealerCount = addDealerCount(dealerCards);
-console.log(userCount);
-
-displayUserCards(userCards);
-displayCPUFirstCard(dealerCards);
-
-// Ask User Hit or Stay?
-while (true) {
-  let userChoice = askHitOrStay();
-  ifUserPicksHit(userChoice, userCards);
-  userCount = addUserCount(userCards);
-  displayUserCards(userCards);
-
-  if (['2', 'stay'].includes(userChoice) || busted(userCount)) break;
-}
-
-if (busted(userCount)) {
-  displayCPUCards(dealerCards);
-  printUserGoesBust();
-} else {
-  ifDealerPicksHit(dealerCount,dealerCards);
-  dealerCount = addDealerCount(dealerCards);
-
-  if (busted(dealerCount)) {
-    displayCPUCards(dealerCards);
-    printDealerGoesBust();
+  while (!['y', 'yes', 'n', 'no'].includes(restart)) {
+    prompt(`Please choose y or n ${emoji.get('pray')}`)
+    restart = readline.question().toLowerCase().trim();
   }
+  return restart;
 }
 
-if (!(busted(userCount) || busted(dealerCount))) {
-  displayCPUCards(dealerCards);
-  printWinner(userCount, dealerCount);
+function printThanksMessage() {
+  prompt(`${`Thanks for playing 21. See you next time!`.rainbow} ${emoji.get('wave')}`)
 }
+
+
+printWelcomeMessage();
+
+setTimeout(() => {
+  while (true) {
+    //initialize deck
+    let userCards = [];
+    let dealerCards = [];
+    let userCount = 0;
+    let dealerCount = 0;
+  
+    //deal starting cards
+    dealCards(2, userCards);
+    dealCards(2, dealerCards);
+  
+    //add scores
+    userCount = addUserCount(userCards);
+    dealerCount = addDealerCount(dealerCards);
+  
+    displayUserCards(userCards, userCount);
+    displayCPUFirstCard(dealerCards);
+  
+    // Ask User Hit or Stay?
+    while (true) {
+      let userChoice = askHitOrStay();
+      ifUserPicksHit(userChoice, userCards);
+      userCount = addUserCount(userCards);
+      displayUserCards(userCards, userCount);
+  
+      if (['2', 'stay'].includes(userChoice) || busted(userCount)) break;
+    }
+  
+    if (busted(userCount)) {
+      displayCPUCards(dealerCards);
+      printUserGoesBust();
+      displayCounts(userCount, dealerCount)
+    } else {
+      ifDealerPicksHit(dealerCount,dealerCards);
+      dealerCount = addDealerCount(dealerCards);
+  
+      if (busted(dealerCount)) {
+        displayCPUCards(dealerCards);
+        printDealerGoesBust();
+        displayCounts(userCount, dealerCount)
+      }
+    }
+  
+    if (!(busted(userCount) || busted(dealerCount))) {
+      displayCPUCards(dealerCards);
+      printWinner(userCount, dealerCount);
+      displayCounts(userCount, dealerCount);
+    }
+  
+    let restart = askForRestartGame();
+    
+  
+    if (['n', 'no'].includes(restart)) break;
+  }
+  printThanksMessage();
+}, 3000);
