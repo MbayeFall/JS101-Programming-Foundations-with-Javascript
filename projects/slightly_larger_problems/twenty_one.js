@@ -45,7 +45,7 @@ function dealCards(numOfCards, player) {
 }
 
 function displayCPUFirstCard(dealerCards) {
-  let firstCardNumber = dealerCards[0][0][0] +"'"+ dealerCards[0][1];
+  let firstCardNumber = dealerCards[0][0][0] + "'" + dealerCards[0][1];
   prompt(`${emoji.get('robot_face')} ${'Dealer'.brightRed} has: ${`${firstCardNumber} and Unknown card`.brightRed}\n`);
 }
 
@@ -54,7 +54,7 @@ function displayUserCards(userCards, userScore, dealerScore, userCount) {
 
   displayScores(userScore, dealerScore);
 
-  let cardNumbers = userCards.map(card => card[0][0]+"'" + card[1]).flat();
+  let cardNumbers = userCards.map(card => card[0][0] + "'" + card[1]).flat();
 
   if (cardNumbers.length <= 2) {
     prompt(`${emoji.get('man')} ${`You`.brightGreen} have: ${`${cardNumbers.join(' and ')}`.brightGreen}    COUNT: ${`${userCount}`.brightGreen}\n`);
@@ -165,7 +165,7 @@ function printTie() {
 }
 
 function displayDealerCards(dealerCards, dealerCount) {
-  let cardNumbers = dealerCards.map(card => card[0][0] +"'"+ card[1]).flat();
+  let cardNumbers = dealerCards.map(card => card[0][0] + "'" + card[1]).flat();
 
   if (cardNumbers.length <= 2) {
     prompt(`${emoji.get('robot_face')} ${`Dealer`.brightRed} has: ${`${cardNumbers.join(' and ')}`.brightRed}    COUNT: ${`${dealerCount}`.brightRed} \n`);
@@ -258,14 +258,14 @@ while (true) {
         hit(userCards);
         userCount = addUserCount(userCards);
       }
-      displayUserCards(userCards, userScore, dealerScore, userCount)
+      displayUserCards(userCards, userScore, dealerScore, userCount);
       displayCPUFirstCard(dealerCards);
 
       if (['2', 'stay'].includes(userChoice) || busted(userCount)) break;
     }
 
     if (busted(userCount)) {
-      displayUserCards(userCards, userScore, dealerScore, userCount)
+      displayUserCards(userCards, userScore, dealerScore, userCount);
       displayDealerCards(dealerCards, dealerCount);
       printUserGoesBust();
       dealerScore = addScore(dealerScore);
@@ -274,7 +274,7 @@ while (true) {
         hit(dealerCards);
         dealerCount = addDealerCount(dealerCards);
       }
-      
+
       if (busted(dealerCount)) {
         displayUserCards(userCards, userScore, dealerScore, userCount);
 
