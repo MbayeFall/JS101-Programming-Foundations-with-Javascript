@@ -25,23 +25,24 @@ function randomCardGenerator() {
   return randomCard;
 }
 
-function cardDuplicateChecker(playerCards, oppositePlayer, newCard) {
+function cardDuplicateChecker(playerCards, oppositePlayerCards, newCard) {
   let valid = true;
   for (let card = 0; card < playerCards.length; card++) {
     if (playerCards[card][0] === newCard[0] &&
        playerCards[card][1] === newCard[1]) valid = false;
   }
-  for (let card = 0; card < oppositePlayer.length; card++) {
-    if (oppositePlayer[card][0] === newCard[0] &&
-       oppositePlayer[card][1] === newCard[1]) valid = false;
+  for (let card = 0; card < oppositePlayerCards.length; card++) {
+    if (oppositePlayerCards[card][0] === newCard[0] &&
+       oppositePlayerCards[card][1] === newCard[1]) valid = false;
   }
   return valid;
 }
 
-function dealCards(numOfCards, player, oppositePlayer) {
+function dealCards(numOfCards, player, oppositePlayerCards) {
   for (let times = 0; times < numOfCards; times++) {
     let randomCard = randomCardGenerator();
-    while (cardDuplicateChecker(player, oppositePlayer, randomCard) === false) {
+    while (cardDuplicateChecker(player, oppositePlayerCards,
+      randomCard) === false) {
       randomCard = randomCardGenerator();
     }
     player.push(randomCard);
@@ -79,8 +80,8 @@ function askHitOrStay() {
   return userChoice;
 }
 
-function hit(player, oppositePlayer) {
-  dealCards(1, player, oppositePlayer);
+function hit(player, oppositePlayerCards) {
+  dealCards(1, player, oppositePlayerCards);
 }
 
 function addUserCount(userCards) {
