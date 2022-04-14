@@ -25,19 +25,23 @@ function randomCardGenerator() {
   return randomCard;
 }
 
-function cardDuplicateChecker(playerCards, newCard) {
+function cardDuplicateChecker(playerCards, oppositePlayer, newCard) {
   let valid = true;
   for (let card = 0; card < playerCards.length; card++) {
     if (playerCards[card][0] === newCard[0] &&
        playerCards[card][1] === newCard[1]) valid = false;
   }
+  for (let card = 0; card < oppositePlayer.length; card++) {
+    if (oppositePlayer[card][0] === newCard[0] &&
+       oppositePlayer[card][1] === newCard[1]) valid = false;
+  }
   return valid;
 }
 
-function dealCards(numOfCards, player) {
+function dealCards(numOfCards, player, oppositePlayer) {
   for (let times = 0; times < numOfCards; times++) {
     let randomCard = randomCardGenerator();
-    while (cardDuplicateChecker(player, randomCard) === false) {
+    while (cardDuplicateChecker(player, oppositePlayer, randomCard) === false) {
       randomCard = randomCardGenerator();
     }
     player.push(randomCard);
@@ -75,8 +79,8 @@ function askHitOrStay() {
   return userChoice;
 }
 
-function hit(player) {
-  dealCards(1, player);
+function hit(player, oppositePlayer) {
+  dealCards(1, player, oppositePlayer);
 }
 
 function addUserCount(userCards) {
@@ -241,8 +245,8 @@ while (true) {
     let dealerCount = 0;
 
     //deal starting cards
-    dealCards(2, userCards);
-    dealCards(2, dealerCards);
+    dealCards(2, userCards, dealerCards);
+    dealCards(2, dealerCards, userCards);
 
     //add scores
     userCount = addUserCount(userCards);
@@ -255,7 +259,7 @@ while (true) {
     while (true) {
       let userChoice = askHitOrStay();
       if (['1', 'hit'].includes(userChoice)) {
-        hit(userCards);
+        hit(userCards, dealerCards);
         userCount = addUserCount(userCards);
       }
       displayUserCards(userCards, userScore, dealerScore, userCount);
@@ -271,7 +275,7 @@ while (true) {
       dealerScore = addScore(dealerScore);
     } else {
       while (dealerCount < DEALER_HIT_LIMIT) {
-        hit(dealerCards);
+        hit(dealerCards, userCards);
         dealerCount = addDealerCount(dealerCards);
       }
 
