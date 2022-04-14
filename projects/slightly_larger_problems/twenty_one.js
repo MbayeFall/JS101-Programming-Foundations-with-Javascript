@@ -1,14 +1,14 @@
 const readline = require('readline-sync');
-const color = require('colors');
 const emoji = require('node-emoji');
+require('colors');
 const MAX_COUNT = 21;
 const DEALER_HIT_LIMIT = 17;
 
 const DECK = {
-  hearts: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'],
-  diamonds: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'],
-  clubs: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'],
-  spades: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace']
+  Hearts: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'],
+  Diamonds: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'],
+  Clubs: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'],
+  Spades: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace']
 };
 
 function prompt(msg) {
@@ -45,21 +45,21 @@ function dealCards(numOfCards, player) {
 }
 
 function displayCPUFirstCard(dealerCards) {
-  let firstCardNumber = dealerCards[0][1];
+  let firstCardNumber = dealerCards[0][0][0] +"'"+ dealerCards[0][1];
   prompt(`${emoji.get('robot_face')} ${'Dealer'.brightRed} has: ${`${firstCardNumber} and Unknown card`.brightRed}\n`);
 }
 
-function displayUserCards(userCards, userScore, dealerScore) {
+function displayUserCards(userCards, userScore, dealerScore, userCount) {
   console.clear();
 
   displayScores(userScore, dealerScore);
 
-  let cardNumbers = userCards.map(card => card[1]).flat();
+  let cardNumbers = userCards.map(card => card[0][0]+"'" + card[1]).flat();
 
   if (cardNumbers.length <= 2) {
-    prompt(`${emoji.get('man')} ${`You`.brightGreen} have: ${`${cardNumbers.join(' and ')}`.brightGreen} \n`);
+    prompt(`${emoji.get('man')} ${`You`.brightGreen} have: ${`${cardNumbers.join(' and ')}`.brightGreen}    COUNT: ${`${userCount}`.brightGreen}\n`);
   } else {
-    prompt(`${emoji.get('man')} ${`You`.brightGreen} have: ${`${joinAnd(cardNumbers)}`.brightGreen} \n`);
+    prompt(`${emoji.get('man')} ${`You`.brightGreen} have: ${`${joinAnd(cardNumbers)}`.brightGreen}    COUNT: ${`${userCount}`.brightGreen} \n`);
   }
 }
 
@@ -68,11 +68,15 @@ function askHitOrStay() {
 
   let userChoice = readline.question().toLowerCase().trim();
 
-  while (!['1', '2', 'hit', 'say'].includes(userChoice)) {
+  while (!['1', '2', 'hit', 'stay'].includes(userChoice)) {
     prompt(`Please choose between 1 or 2. ${emoji.get('pray')}`);
     userChoice = readline.question().toLowerCase().trim();
   }
   return userChoice;
+}
+
+function hit(player) {
+  dealCards(1, player);
 }
 
 function addUserCount(userCards) {
@@ -110,16 +114,6 @@ function addCount(cardNumbers, count) {
   return count;
 }
 
-function ifUserPicksHit(userChoice, userCards) {
-  if (['1', 'hit'].includes(userChoice)) {
-    dealCards(1, userCards);
-  }
-}
-
-function displayCounts(userCount, dealerCount) {
-  prompt(`${emoji.get('man')} ${`Your Count: ${userCount}`.brightGreen} ${emoji.get('robot_face')} ${`Dealer Count: ${dealerCount}`.brightRed}\n`);
-}
-
 function printUserGoesBust() {
   prompt(`${`Oh Oh! You go bust! ${emoji.get('robot_face')} Dealer wins!`.inverse} ${emoji.get('yum')}\n`);
 }
@@ -143,13 +137,6 @@ function printDealerWins() {
 
 function printUserWins() {
   prompt(`${`${emoji.get('man')} You win! Well done with the "Stay"`.inverse} ${emoji.get('trophy')}\n`);
-}
-
-function ifDealerPicksHit(dealerCount, dealerCards) {
-  while (dealerCount < DEALER_HIT_LIMIT) {
-    dealCards(1, dealerCards);
-    dealerCount = addDealerCount(dealerCards);
-  }
 }
 
 function printDealerGoesBust() {
@@ -177,13 +164,13 @@ function printTie() {
   prompt(`${`It's a tie!`.inverse} ${emoji.get('scales')}\n`);
 }
 
-function displayDealerCards(dealerCards) {
-  let cardNumbers = dealerCards.map(card => card[1]).flat();
+function displayDealerCards(dealerCards, dealerCount) {
+  let cardNumbers = dealerCards.map(card => card[0][0] +"'"+ card[1]).flat();
 
   if (cardNumbers.length <= 2) {
-    prompt(`${emoji.get('robot_face')} ${`Dealer`.brightRed} has: ${`${cardNumbers.join(' and ')}`.brightRed} \n`);
+    prompt(`${emoji.get('robot_face')} ${`Dealer`.brightRed} has: ${`${cardNumbers.join(' and ')}`.brightRed}    COUNT: ${`${dealerCount}`.brightRed} \n`);
   } else {
-    prompt(`${emoji.get('robot_face')} ${`Dealer`.brightRed} has: ${`${joinAnd(cardNumbers)}`.brightRed} \n`);
+    prompt(`${emoji.get('robot_face')} ${`Dealer`.brightRed} has: ${`${joinAnd(cardNumbers)}`.brightRed}    COUNT: ${`${dealerCount}`.brightRed} \n`);
   }
 }
 
@@ -261,49 +248,60 @@ while (true) {
     userCount = addUserCount(userCards);
     dealerCount = addDealerCount(dealerCards);
 
-    displayUserCards(userCards, userScore, dealerScore);
+    displayUserCards(userCards, userScore, dealerScore, userCount);
     displayCPUFirstCard(dealerCards);
 
     // Ask User Hit or Stay?
     while (true) {
       let userChoice = askHitOrStay();
-      ifUserPicksHit(userChoice, userCards);
-      userCount = addUserCount(userCards);
-      displayUserCards(userCards, userScore, dealerScore);
+      if (['1', 'hit'].includes(userChoice)) {
+        hit(userCards);
+        userCount = addUserCount(userCards);
+      }
+      displayUserCards(userCards, userScore, dealerScore, userCount)
+      displayCPUFirstCard(dealerCards);
 
       if (['2', 'stay'].includes(userChoice) || busted(userCount)) break;
     }
 
     if (busted(userCount)) {
-      displayDealerCards(dealerCards);
+      displayUserCards(userCards, userScore, dealerScore, userCount)
+      displayDealerCards(dealerCards, dealerCount);
       printUserGoesBust();
-      displayCounts(userCount, dealerCount);
       dealerScore = addScore(dealerScore);
     } else {
-      ifDealerPicksHit(dealerCount,dealerCards);
-      dealerCount = addDealerCount(dealerCards);
-
+      while (dealerCount < DEALER_HIT_LIMIT) {
+        hit(dealerCards);
+        dealerCount = addDealerCount(dealerCards);
+      }
+      
       if (busted(dealerCount)) {
-        displayDealerCards(dealerCards);
+        displayUserCards(userCards, userScore, dealerScore, userCount);
+
+        displayDealerCards(dealerCards, dealerCount);
         printDealerGoesBust();
-        displayCounts(userCount, dealerCount);
         userScore = addScore(userScore);
       }
     }
 
     if (!(busted(userCount) || busted(dealerCount))) {
-      displayDealerCards(dealerCards);
+      displayDealerCards(dealerCards, dealerCount);
       let winner = checkWinner(userCount, dealerCount);
       if (winner === 'user') {
+        displayUserCards(userCards, userScore, dealerScore, userCount);
+        displayDealerCards(dealerCards, dealerCount);
         printUserWins();
         userScore = addScore(userScore);
       } else if (winner === 'dealer') {
+        displayUserCards(userCards, userScore, dealerScore, userCount);
+        displayDealerCards(dealerCards, dealerCount);
         printDealerWins();
         dealerScore = addScore(userScore);
       } else {
+        displayUserCards(userCards, userScore, dealerScore, userCount);
+        displayDealerCards(dealerCards, dealerCount);
         printTie();
       }
-      displayCounts(userCount, dealerCount);
     }
 
     let grandWinner = checkGrandWinner(userScore, dealerScore);
