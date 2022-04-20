@@ -1,3 +1,3 @@
-for (let num = 2; num <= 98; num += 2) {
-  console.log(num);
+for (let num = 1; num <= 99; num++) {
+  if (num % 2 === 0) console.log(num);
 }

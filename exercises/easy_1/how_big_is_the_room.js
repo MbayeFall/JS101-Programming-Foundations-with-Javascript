@@ -1,18 +1,13 @@
 const readline = require('readline-sync');
+const  SQUARE_METER_TO_FEET = 10.7639;
 
-function prompt(string) {
-  console.log(`=> ${string}`);
-}
+console.log('Enter the length of the room in meters:');
+let length = Number(readline.prompt());
 
-prompt('Welcome to How Big Is The Room\n');
+console.log('Enter the width of the room in meters:');
+let width = Number(readline.prompt());
 
-prompt('Enter the length of the room in meters');
-let length = readline.prompt();
+let area = length * width;
+let areaInSquareFeet = area * SQUARE_METER_TO_FEET;
 
-prompt('Enter the width of the room in meters');
-let width = readline.prompt();
-
-let areaInMeters = length * width;
-let areaInFeet = areaInMeters * 10.7639;
-
-console.log(`The area of the room is ${areaInMeters} square meters (${areaInFeet} square feet).`);
+console.log(`The area of the room is ${area} square meters (${areaInSquareFeet.toFixed(2)} square feet).`);

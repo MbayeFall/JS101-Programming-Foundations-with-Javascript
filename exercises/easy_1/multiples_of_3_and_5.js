@@ -1,11 +1,11 @@
-function multisum(num) {
-  let finalNum = 0;
-  for (let i = 0; i <= num; i++) {
-    if (i % 3 === 0 || i % 5 === 0) {
-      finalNum += i;
-    }
+function multisum(number) {
+  let allNumbers = [];
+  for (let num = 0; num <= number; num++) {
+    if (num % 3 === 0 || num % 5 === 0) allNumbers.push(num);
   }
-  return finalNum;
+  let total = allNumbers.reduce((acc, cur) => acc + cur, 0);
+
+  return total;
 }
 
 console.log(multisum(3));       // 3

@@ -1,9 +1,9 @@
 let utf16Value = string => {
-  let utfValue = 0;
-  for (let i = 0; i < string.length; i++) {
-    utfValue += string.charCodeAt(i)
+  let totalUTF16Value = 0;
+  for (let idx = 0; idx < string.length; idx++) {
+    totalUTF16Value += string.charCodeAt(idx);
   }
-  return utfValue
+  return totalUTF16Value
 }
 
 console.log(utf16Value('Four score'));         // 984

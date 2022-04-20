@@ -1,9 +1,7 @@
 function shortLongShort(str1, str2) {
-  if (str1.length < str2.length) {
-    return str1 + str2 + str1;
-  } else if (str2.length < str1.length) {
-    return str2 + str1 + str2;
-  }
+  let shorterString = str1.length < str2.length ? str1 : str2;
+  let longerString = str1.length > str2.length ? str1 : str2;
+  return shorterString + longerString + shorterString;
 }
 
 console.log(shortLongShort('abc', 'defgh'));    // "abcdefghabc"

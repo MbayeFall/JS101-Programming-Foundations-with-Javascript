@@ -1,12 +1,11 @@
 const readline = require('readline-sync');
 
-console.log('What is the bill?');
-let bill = parseInt(readline.question());
+let bill = Number(readline.question('What is the bill? '));
 
-console.log('What is the tip percentage');
-let percentage = parseInt(readline.question());
+let tipPercentage = Number(readline.question('What is the tip percentage? '));
 
-let tip = bill * (percentage / 100);
+let tip = bill * tipPercentage / 100;
+
 let total = bill + tip;
 
 console.log(`The tip is $${tip.toFixed(2)}`);
