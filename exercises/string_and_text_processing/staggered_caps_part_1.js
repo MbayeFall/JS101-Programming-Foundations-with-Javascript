@@ -1,13 +1,15 @@
 function staggeredCase(string) {
   string = string.split('')
 
-  for (let index = 0; index < string.length; index += 2) {
-    let char = string[index];
-    string[index] = char.toUpperCase();
-  }
-  for (let index = 1; index < string.length; index += 2) {
-    let char = string[index];
-    string[index] = char.toLowerCase();
+  for (let idx = 0; idx < string.length; idx++) {
+    let currentChar = string[idx];
+    if (idx % 2 === 1) {
+      if (currentChar === currentChar.toUpperCase()) {
+        string[idx] = currentChar.toLowerCase();
+      } else {
+        string[idx] = currentChar.toUpperCase();
+      }
+    }
   }
   console.log(string.join(''))
 }
