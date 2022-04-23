@@ -1,5 +1,5 @@
 function isPalindrome(string) {
-  return string === string.split('').reverse().join(''); 
+  return string.split('').reverse().join('') === string; 
 }
 
 isPalindrome('madam');               // true
