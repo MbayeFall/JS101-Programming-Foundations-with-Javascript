@@ -1,0 +1,81 @@
+/*
+You've been given the task of retrieving the top N high scores from players of a video game.
+
+You need to write the function top_scores(records, n_top)
+
+where records is a list of lists in the form of
+
+records = [
+  ["Bob", 100],
+  ["Jane", 120],
+  ["Alice", 10],
+  ["Bob", 110],
+  ["Bob", 10]
+]
+and n_top is an integer.
+
+The function should return the top n records, where each user name can appear at most a single time. Records should be in from highest to lowest. Users with the same score should be in alphabetical order.
+
+>>> top_scores(records, 3)
+[["Jane", 120],["Bob", 110],["Alice", 10]]
+if n_top is negative or 0, the returned value should be an empty list.
+
+if n_top is greater than the total number of records, you should include as many valid records as possible.
+*/
+
+function topScores(records, nTop) {
+  if (nTop <= 0 ) return [];
+  let finalArr = [];
+  records.sort((a, b) => {
+    if (a[1] > b[1]) {
+      return -1;
+    } else if (a[1] < b[1]) {
+      return 1;
+    } else {
+      if (a[0] < b[0]) {
+        return -1;
+      } else return 1;
+    }
+  });
+  
+  let newArr = [];
+  records.forEach(subArr => {
+    let isIncluded = newArr.some(subArray => {
+      return subArray.includes(subArr[0])
+    })
+    if (!isIncluded) newArr.push(subArr);
+  })
+  
+  if (nTop > newArr.length) nTop = newArr.length;
+  
+  for (let idx = 0; idx < nTop; idx++) {
+    finalArr.push(newArr[idx]);
+  }
+  return finalArr;
+}
+
+/*
+input: an array and an integers (2 arguments)
+output: array of nested subArrays
+
+retrieving the highest scores depending on an integer input
+
+- if n_top (2nd argument) is negative or 0, return an empty list 
+- if n_top is greater than the number of subArrays, return as many subArrays
+
+[john, 100]
+
+
+- if n_top is negative or 0 return an empty list
+- create a final Array variable initialized to an empty array
+- sort all of the nested subArrays in a descending order
+- create a new array
+- iterate over the sorted array one by one,
+  - if first element of current array is not included as a first index of a subArray of new Array
+  - add it to newArr
+- if n_top is greater than the length of the subarrays, change n_top to length of subarray
+- loop over the array one by one as many times as the second integer,
+- during each iteration, 
+  - add the current index of the array to the final array
+
+*/
